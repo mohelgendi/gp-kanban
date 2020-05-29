@@ -3,11 +3,11 @@
     <b-card no-body class="shadow-lg login-card" style="max-width: 500px;background-color: #EDF0F5;">
       <b-row no-gutters>
         <b-col>
-          <b-card-img src="img/loginform.jpg" class="rounded-0"></b-card-img>
+          <b-card-img src="img/signinform.jpg" class="rounded-0"></b-card-img>
         </b-col>
         <b-col>
           <br>
-          <b-card-body style="text-align: left;" title="Login">
+          <b-card-body style="text-align: left;" title="Create an Account">
             <br>
             <label for="">E-mail</label>
             <b-form-input
@@ -21,10 +21,13 @@
               type="password"
             ></b-form-input>
             <br>
-            <b-button variant="outline-primary">Login</b-button>
+            <label for="">Confirm Password</label>
+            <b-form-input
+              placeholder="Re-enter your password"
+              type="password"
+            ></b-form-input>
             <br>
-            <br>
-            <router-link  style="font-size: 13px; color: #727272;" to="/signup"> <p>New user?.. create an account</p></router-link>
+            <b-button variant="outline-primary">Sign Up</b-button>
           </b-card-body>
         </b-col>
       </b-row>
@@ -36,10 +39,10 @@
 <script>
 import Footer from '../components/Footer'
 export default {
-  name: 'Login',
+  name: 'Signup',
   components: { Footer },
   beforeCreate () {
-    document.body.className = 'login'
+    document.body.className = 'signup'
   }
 }
 </script>
