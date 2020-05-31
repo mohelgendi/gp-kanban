@@ -79,8 +79,8 @@ export default {
   z-index: 1;
   top: 0;
   left: 0;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
   background-color: #2682fe;
   overflow-x: hidden;
   padding-top: 20px;

@@ -1,46 +1,40 @@
 <template>
   <div class="list-container shadow">
     <b-row>
-      <b-col cols="9">
-        <p class="list-name">List Name</p>
-        <div class="field">
-          <span
-            class="field-value"
-            v-show="!showField('name')"
-            @click="focusField('name')"
-          >{{user.name}}</span>
-          <input
-            v-model="user.name"
-            v-show="showField('name')"
-            id="user-name"
-            type="text"
-            class="field-value form-control"
-            @focus="focusField('name')"
-            @blur="blurField"
-          />
-        </div>
+      <b-col cols="8">
+        <contenteditable
+          spellcheck="false"
+          class="list-name"
+          tag="p"
+          :contenteditable="true"
+          v-model="list.title"
+          :noNL="true"
+        />
       </b-col>
-      <b-col cols="3">
-        <b-dropdown
-          style="float: right; opacity: 0.9"
-          dropright
+      <b-col cols="1" style="margin-left:15px;">
+        <b-icon v-b-modal="`modal-delete-${list.id}`" class="trash-icon" icon="trash-fill" font-scale="1"></b-icon>
+        <b-modal
+          @ok="deleteList(list)"
+          :id="`modal-delete-${list.id}`"
           size="sm"
-          variant="linkr"
-          toggle-class="text-decoration-none"
-          no-caret
-        >
-          <template v-slot:button-content>
-            <b-icon icon="three-dots" font-scale="2"></b-icon>
-          </template>
-          <b-dropdown-item href="#">Action</b-dropdown-item>
-          <b-dropdown-item href="#">Another action</b-dropdown-item>
-        </b-dropdown>
+          button-size="sm"
+          centered
+          title="Delete List"
+        >This list will be deleted.</b-modal>
+      </b-col>
+      <b-col cols="1">
+        <b-icon class="drag-icon" icon="arrows-move" font-scale="1.1"></b-icon>
       </b-col>
     </b-row>
-    <draggable :options="{animation:400}">
-      <Card v-for="(card, i) in cards" :key="i" :card="card" />
+    <draggable
+      :class="list.cards.length?'':'empty-card'"
+      v-model="list.cards"
+      :group="{ name: 'list.cards', pull: true, put: true }"
+      :sort="true"
+      :animation="400"
+    >
+      <Card v-for="(card, i) in list.cards" :key="i" :card="card" :list="list" :board="board" />
     </draggable>
-    <div v-show="cards.length==0" class="empty-card"></div>
     <b-icon @click="addCard()" class="add-plus" icon="plus" font-scale="3"></b-icon>
   </div>
 </template>
@@ -48,43 +42,29 @@
 <script>
 import Card from '../components/Card'
 import draggable from 'vuedraggable'
+import helper from '../helpers/helper'
 export default {
   name: 'List',
+  props: ['list', 'board'],
   components: { Card, draggable },
   data () {
     return {
-      listName: 'To Do List',
-      id: 'sd21',
-      cards: [],
-      user: {
-        name: '',
-        email: ''
-      }
     }
   },
   methods: {
     addCard () {
-      const card = {
-        header: 'Card Header',
-        content: 'Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has',
-        tags: [
-          { title: 'data', variant: 'danger' },
-          { title: 'math', variant: 'success' }
-        ],
-        avatars: [
-          { variant: 'primary' }, { variant: 'danger' }, { variant: 'warning' }
-        ]
+      const newCard = {
+        id: helper.generateUUID(),
+        title: 'click to edit',
+        content: 'add your content',
+        tags: [],
+        assignees: [],
+        attachments: []
       }
-      this.cards.push(card)
+      this.list.cards.push(newCard)
     },
-    focusField (name) {
-      this.editField = name
-    },
-    blurField () {
-      this.editField = ''
-    },
-    showField (name) {
-      return (this.user[name] === '' || this.editField === name)
+    deleteList (list) {
+      this.board.lists = this.board.lists.filter(x => { return x.id !== list.id })
     }
   }
 }
@@ -96,6 +76,7 @@ export default {
   background-color: #d4d4d4ab;
   border-radius: 10px;
   padding: 0.3rem 0.8rem;
+  display: block;
 }
 .list-name {
   font-size: 1.3rem;
@@ -110,7 +91,17 @@ export default {
 .empty-card {
   border-radius: 5px;
   border: 1px rgba(128, 128, 128, 0.603) dashed;
-  min-height: 5rem;
+  min-height: 4.5rem;
   text-align: center;
+}
+.drag-icon {
+  margin-top: 10px;
+  cursor: all-scroll;
+  opacity: 0.9;
+}
+.trash-icon {
+  margin-top: 10px;
+  cursor: pointer;
+  opacity: 0.9;
 }
 </style>
