@@ -35,7 +35,7 @@ export default {
     -o-background-size: cover;
     background-size: cover;
   }
-  body.dashboard {
+  .dashboard {
     background-color: #ccdffa;
     margin-left: 70px; /* Same as the width of the sidenav */
     transition: 0.5s;

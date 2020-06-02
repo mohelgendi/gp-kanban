@@ -11,7 +11,7 @@
               style="font-size: 2rem"
             >Kanban’s boards, lists, and cards enable you to organize and prioritize your projects in a fun, flexible, and rewarding way.</h4>
             <br>
-            <b-button pill variant="outline-info" style="width:45%;font-size:22px;">Start Now</b-button>
+            <b-button pill variant="outline-info" to="/login" style="width:45%;font-size:22px;">Start Now</b-button>
           </b-col>
           <b-col>
             <img src="img/team.png" />

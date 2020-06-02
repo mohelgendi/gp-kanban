@@ -23,9 +23,14 @@
             <b-icon icon="three-dots" font-scale="1.5"></b-icon>
           </template>
           <b-dropdown-item v-b-modal="`modal-delete-${card.id}`">Delete</b-dropdown-item>
-           <b-modal @ok="deleteCard(card)" :id="`modal-delete-${card.id}`" size="sm" button-size="sm" centered title="Delete Card">
-             This card will be deleted.
-           </b-modal>
+          <b-modal
+            @ok="deleteCard(card)"
+            :id="`modal-delete-${card.id}`"
+            size="sm"
+            button-size="sm"
+            centered
+            title="Delete Card"
+          >This card will be deleted.</b-modal>
           <b-dropdown-item v-b-modal="`modal-center-${card.id}`">Edit</b-dropdown-item>
           <b-modal :id="`modal-center-${card.id}`" centered title="Edit Card" ok-only>
             <b-form-group id="input-group-1" label="Card title" label-for="card-title">
@@ -68,6 +73,15 @@
                   </b-form-select>
                 </template>
               </b-form-tags>
+            </b-form-group>
+            <b-form-group id="input-group-4" label="Add tags to the card">
+              <b-form-tags
+                remove-on-delete
+                placeholder="Add tags and press enter..."
+                input-id="tags-basic"
+                v-model="cardTags"
+                class="mb-2"
+              ></b-form-tags>
             </b-form-group>
           </b-modal>
         </b-dropdown>
@@ -117,17 +131,27 @@ export default {
   props: ['card', 'list', 'board'],
   data () {
     return {
-      value: []
+      value: [],
+      cardTags: []
     }
   },
   created () {
-    this.card.assignees.forEach(assignee => {
-      this.value.push(assignee.name)
-    })
+    this.retrieveAssignees()
+    this.retrieveTags()
   },
   methods: {
     deleteCard (card) {
       this.list.cards = this.list.cards.filter(x => { return x.id !== card.id })
+    },
+    retrieveAssignees () {
+      this.card.assignees.forEach(assignee => {
+        this.value.push(assignee.name)
+      })
+    },
+    retrieveTags () {
+      this.card.tags.forEach(tag => {
+        this.cardTags.push(tag.title)
+      })
     }
   },
   computed: {
@@ -144,6 +168,17 @@ export default {
   watch: {
     value () {
       this.card.assignees = this.board.participants.filter(p => this.value.includes(p.name))
+    },
+    cardTags () {
+      const tags = []
+      const variants = ['primary', 'secondary', 'success', 'warning', 'danger']
+      this.cardTags.forEach((tag, i) => {
+        const temp = {}
+        temp.title = tag
+        temp.variant = variants[Math.floor(Math.random() * 5)]
+        tags.push(temp)
+      })
+      this.card.tags = tags
     }
   }
 }

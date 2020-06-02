@@ -12,10 +12,10 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item to="/login">Start Now</b-nav-item>
+          <b-nav-item to="/login" v-show="!getLoginStatus">Start Now</b-nav-item>
         </b-navbar-nav>
         <b-navbar-nav>
-          <b-nav-item to="/dashboard">Dashboard</b-nav-item>
+          <b-nav-item to="/dashboard" v-show="getLoginStatus">Dashboard</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -42,14 +42,20 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
-  name: 'NavBar'
+  name: 'NavBar',
+  computed: {
+    ...mapGetters([
+      'getLoginStatus'
+    ])
+  }
 }
 </script>
 
 <style scoped>
 .top-navbar {
-  background-color:#0000000c !important;
+  background-color: #0000000c !important;
 }
 
 .navbar-light .navbar-brand:hover,
